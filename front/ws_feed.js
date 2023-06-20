@@ -1,4 +1,35 @@
-const ws_worker = new Worker("/static/js/feeds/ws_worker.js");
+let ws_worker;
+
+// Function to start the web worker
+function startWorker() {
+  ws_worker = new Worker('/static/js/feeds/ws_worker.js');
+  // ... Additional configuration or event listeners for the worker
+}
+
+// Function to stop the web worker
+function stopWorker() {
+  if (myWorker) {
+    ws_worker.terminate();
+    ws_worker = undefined;
+  }
+}
+
+// Event handler for page visibility change
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    startWorker();
+  } else {
+    stopWorker();
+  }
+});
+
+// Event handler for page load
+window.addEventListener('load', function() {
+  if (!document.hidden) {
+    startWorker();
+  }
+});
+
 var itch_market_status = "";
 var dse_md_cp_msg = {};
 var dse_md_ltp_msg = {};

@@ -122,6 +122,8 @@ setInterval(() => {
         if (_.isEmpty(dse_md_news_msg) == false) dse_md_news(dse_md_news_msg);
     });
 }, ui_refresh_interval);
+
+
 function dse_md_tv_status(msg) {
     if (parseInt(msg.value.status) == 4) {
         $("#statuslight").prop("title", "Connected");
@@ -428,14 +430,8 @@ function dse_md_ltp(msg) {
 function dse_md_index(msg) {
     var name = msg.value.index_name;
     var value = parseFloat(msg.value.value);
-    var y_value = parseFloat(msg.value.y_value);
     var change = parseFloat(msg.value.change);
     var change_per = parseFloat(msg.value.change_per);
-    var open = parseFloat(msg.value.open);
-    var high = parseFloat(msg.value.high);
-    var low = parseFloat(msg.value.low);
-    var time = msg.value.time;
-    var unix_time = parseFloat(msg.value.unix_time);
     var idx_div = "idx_" + name;
     var idx_val = "val_" + name;
     var idx_chg = "chg_" + name;
@@ -927,8 +923,6 @@ function add_new_order_terminal(msg) {
 function update_cancel_order_terminal(msg) {
     var client_orderid;
     var order_status_text = "Cancelled";
-    var order_status;
-    var exec_status;
     var status_class = "";
     var row_class = "";
     var orderid_div = "";
@@ -979,8 +973,6 @@ function update_cancel_order_terminal(msg) {
 function update_order_terminal(msg) {
     var client_orderid;
     var order_status_text = "";
-    var order_status;
-    var exec_status;
     var status_class = "";
     var row_class = "";
     var order_type_text = "";
@@ -1272,16 +1264,10 @@ function flash_updates(msg) {
         show_flash_messages("Error: " + error_msg, "danger");
     }
     if (msg.value.error_msg == "") {
-        var orig_clientid = $("#client_order_id").val();
-        var fix_client_orderid = msg.value.orderid;
         var order_status = msg.value.order_status;
         var exec_type = msg.value.exec_type;
         var time_in_force = msg.value.time_in_force;
         var order_type = msg.value.order_type;
-        var exch_time = msg.value.exch_time;
-        var broker_time = msg.value.broker_time;
-        var latency = msg.value.latency;
-        var order_side = msg.value.order_side;
         var order_status_text;
         var exec_type_text;
         var time_in_force_text;

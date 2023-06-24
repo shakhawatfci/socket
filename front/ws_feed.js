@@ -14,21 +14,7 @@ function stopWorker() {
   }
 }
 
-// Event handler for page visibility change
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible') {
-    startWorker();
-  } else {
-    stopWorker();
-  }
-});
 
-// Event handler for page load
-window.addEventListener('load', function() {
-  if (!document.hidden) {
-    startWorker();
-  }
-});
 
 var itch_market_status = "";
 var dse_md_cp_msg = {};
@@ -123,36 +109,54 @@ ws_worker.onmessage = (resp) => {
             break;
     }
 };
-setInterval(() => {
+
+
+function updateUI() {
+  if (!_.isEmpty(dse_md_cp_msg)) {
+    requestAnimationFrame(() => dse_md_cp(dse_md_cp_msg));
+  }
+  
+  if (!_.isEmpty(dse_md_ltp_msg)) {
     requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_cp_msg) == false) dse_md_cp(dse_md_cp_msg);
+      dse_md_ltp(dse_md_ltp_msg);
+      update_ticker(dse_md_ltp_msg);
     });
-}, ui_refresh_interval);
-setInterval(() => {
-    requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_ltp_msg) == false) dse_md_ltp(dse_md_ltp_msg);
-    });
-}, ui_refresh_interval);
-setInterval(() => {
-    requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_ltp_msg) == false) update_ticker(dse_md_ltp_msg);
-    });
-}, 700);
-setInterval(() => {
-    requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_index_msg) == false) dse_md_index(dse_md_index_msg);
-    });
-}, ui_refresh_interval);
-setInterval(() => {
-    requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_bbo_msg) == false) dse_md_bbo(dse_md_bbo_msg);
-    });
-}, ui_refresh_interval);
-setInterval(() => {
-    requestAnimationFrame(() => {
-        if (_.isEmpty(dse_md_news_msg) == false) dse_md_news(dse_md_news_msg);
-    });
-}, ui_refresh_interval);
+  }
+  
+  if (!_.isEmpty(dse_md_index_msg)) {
+    requestAnimationFrame(() => dse_md_index(dse_md_index_msg));
+  }
+  
+  if (!_.isEmpty(dse_md_bbo_msg)) {
+    requestAnimationFrame(() => dse_md_bbo(dse_md_bbo_msg));
+  }
+  
+  if (!_.isEmpty(dse_md_news_msg)) {
+    requestAnimationFrame(() => dse_md_news(dse_md_news_msg));
+  }
+}
+
+
+// Event handler for page visibility change
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    startWorker();
+    getMarketStatus();
+  } else {
+    stopWorker();
+  }
+});
+
+// Event handler for page load
+window.addEventListener('DOMContentLoaded', function() {
+  if (!document.hidden) {
+    startWorker();
+    getMarketStatus();
+  }
+});
+
+setInterval(updateUI, ui_refresh_interval);
+setInterval(getMarketStatus, 1000);
 
 
 function dse_md_tv_status(msg) {

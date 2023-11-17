@@ -4,74 +4,34 @@ socket.on('connect', () => {
     console.log('Connected to server');
 });
 
-socket.on('randomNumber', (msg) => {
-    console.log('Received message:', msg);
+socket.on('new_user_created', (msg) => {
+    createNewUser(msg)
 });
 
-socket.on('eventTwo', (msg) => {
-    console.log('Event  message:', msg);
-});
-socket.on('eventTo', (msg) => {
-    console.log('Evenrt  message:', msg);
+
+socket.on('user_updated', (msg) => {
+    updateUser(msg)
 });
 
-socket.on('postsData', (msg) => {
-    console.log(msg);
 
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-});
+function createNewUser(user) {
+    var new_element = `<tr id="user-${user.id}">
+    <th class="user_id">${user.id}</th>
+    <th class="user_name">${user.name}</th>
+    <th class="user_email">${user.email}</th>
+</tr>`
 
-socket.on('posy', (msg) => {
-    console.log(msg);
+    $('#users').append(new_element)
+}
 
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-    msg.data.forEach((item) => {
-        console.log(item.title);
-    })
-});
+function updateUser(user) {
+    if ($('#users #user-' + user.id).length > 0) {
+        $('#users #user-' + user.id).find('.user_name').text(user.name);
+        $('#users #user-' + user.id).find('.user_email').text(user.email);
+    }
+
+}
+
 
 window.addEventListener('beforeunload', () => {
     socket.disconnect();

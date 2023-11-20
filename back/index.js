@@ -15,12 +15,8 @@ app.use(cors({
 }));
 const axios = require('axios');
 io.on('connection', (socket) => {
-    socket.on('new_user_created_backend', (msg) => {
-        io.emit('new_user_created', msg);
-    });
-
-    socket.on('user_updated_backend', (msg) => {
-        io.emit('user_updated', msg);
+    socket.on('publish_socket_messages', (msg) => {
+        io.emit(msg.channel, msg.msg);
     });
 
 });

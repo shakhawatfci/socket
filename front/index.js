@@ -1,4 +1,24 @@
-const socket = io("http://localhost:8080");
+
+
+const generateToken = () => {
+    const offset = 6; // UTC+6
+    const date = new Date();
+    const utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+    const localDate = new Date(utcDate.getTime() + (offset * 3600000));
+    const formattedDate = localDate.toISOString().split('T')[0]; // YYYY-MM-DD 
+    const tokenString = 'QNT+' + formattedDate;
+    return CryptoJS.MD5(tokenString).toString();
+};
+
+
+const token = generateToken();
+
+const socket = io("http://localhost:8080", { // Specify your server URL here
+    auth: {
+        token: token
+    }
+});
+
 
 socket.on('connect', () => {
     console.log('Connected to server');
